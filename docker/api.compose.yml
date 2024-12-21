@@ -1,0 +1,56 @@
+name: sanglia_fly_api
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: sanglia_fly
+    networks:
+      - backbone
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d sanglia_fly -U user" ]
+      interval: 5s
+      timeout: 60s
+      retries: 10
+      start_period: 10s
+
+  api:
+    build:
+      context: ../slangia_fly_api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRESQL_ADDON_DB: sanglia_fly
+      POSTGRESQL_ADDON_HOST: db
+      POSTGRESQL_ADDON_PASSWORD: password
+      POSTGRESQL_ADDON_PORT: 5432
+      POSTGRESQL_ADDON_USER: user
+      PORT: 8080
+      KAFKA_URL: todo
+      KAFKA_TOPIC: locations
+    ports:
+      - "8080:8080"
+    networks:
+      - backbone
+    healthcheck:
+      test: [ "CMD-SHELL", "curl http://localhost:8080" ]
+      interval: 5s
+      timeout: 60s
+      retries: 10
+      start_period: 10s
+    develop:
+      watch:
+        - action: sync+restart
+          path: ../slangia_fly_api
+          target: /app
+          ignore:
+            - requirements.txt
+        - action: rebuild
+          path: ../slangia_fly_api/requirements.txt
+
+networks:
+  backbone:
+    driver: bridge
