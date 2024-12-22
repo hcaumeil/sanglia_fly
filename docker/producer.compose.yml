@@ -1,0 +1,28 @@
+name: sanglia_fly_producer
+
+services:
+  producer:
+    build:
+      context: ../sanglia_fly_producer
+    environment:
+      KAFKA_URL: todo
+      KAFKA_TOPIC: locations
+    healthcheck:
+      test: [ "CMD-SHELL", "curl http://localhost:8800" ]
+      interval: 5s
+      timeout: 60s
+      retries: 10
+      start_period: 10s
+    scale: 1
+    develop:
+      watch:
+        - action: sync+restart
+          path: ../sanglia_fly_producer
+          target: /app
+          ignore:
+            - requirements.txt
+            - Dockerfile
+        - action: rebuild
+          path: ../sanglia_fly_producer/requirements.txt
+        - action: rebuild
+          path: ../sanglia_fly_producer/Dockerfile
