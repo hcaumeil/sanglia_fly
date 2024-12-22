@@ -35,7 +35,6 @@ def on_send_error(excp):
 
 # Create a producer with JSON serializer
 producer = KafkaProducer(
-    client_id='0001',
     bootstrap_servers=kafka_url,
     value_serializer=lambda v: json.dumps(v).encode('utf-8'),
     max_block_ms=3000,
