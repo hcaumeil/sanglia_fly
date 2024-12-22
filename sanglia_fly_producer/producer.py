@@ -44,6 +44,8 @@ while True:
         'https://data-live.flightradar24.com/clickhandler/?version=1.5&flight=' + selected_flight['id'])
     data_flight = data_flight.json()
 
+    if not data_flight['status']['live']: break
+
     selected_data_flight = data_flight["trail"][0]
 
     data = {
