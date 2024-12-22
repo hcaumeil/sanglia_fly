@@ -1,4 +1,5 @@
 import json
+import random
 import time
 from kafka import KafkaProducer
 import requests
@@ -62,5 +63,5 @@ while True:
     # Sending JSON data
     producer.send(topic=kafka_topic, value=data).add_callback(on_send_success).add_errback(on_send_error)
 
-    time.sleep(31)
+    time.sleep(31 + random.random() * 8)
 # producer.flush()
