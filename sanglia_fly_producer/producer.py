@@ -1,13 +1,16 @@
 import json
+import random
 import time
 from kafka import KafkaProducer
 import requests
 from utils import expect_env_var
+from utils import header_request
 
 kafka_url = expect_env_var("KAFKA_URL")
 kafka_topic = expect_env_var("KAFKA_TOPIC")
 
-list_flights = requests.get('https://www.flightradar24.com/v1/search/web/find?query=afr&limit=5000')
+list_flights = requests.get('https://www.flightradar24.com/v1/search/web/find?query=afr&limit=5000',
+                            headers=header_request())
 
 list_flights = list_flights.json()['results']
 
@@ -41,8 +44,11 @@ producer = KafkaProducer(
 )
 while True:
     data_flight = requests.get(
-        'https://data-live.flightradar24.com/clickhandler/?version=1.5&flight=' + selected_flight['id'])
+        'https://data-live.flightradar24.com/clickhandler/?version=1.5&flight=' + selected_flight['id'],
+        headers=header_request())
     data_flight = data_flight.json()
+
+    if not data_flight['status']['live']: break
 
     selected_data_flight = data_flight["trail"][0]
 
@@ -60,5 +66,5 @@ while True:
     # Sending JSON data
     producer.send(topic=kafka_topic, value=data).add_callback(on_send_success).add_errback(on_send_error)
 
-    time.sleep(31)
+    time.sleep(31 + random.random() * 8)
 # producer.flush()
