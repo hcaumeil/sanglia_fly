@@ -11,6 +11,19 @@ services:
     network_mode: ""
     networks:
       - backbone
+  producer:
+    extends:
+      service: producer
+      file: producer.compose.yml
+    depends_on:
+      kafka_broker:
+        condition: service_healthy
+        required: true
+    environment:
+      KAFKA_URL: kafka_broker:9092
+    networks:
+      - backbone
+    scale: 3
   db:
     extends:
       service: db
