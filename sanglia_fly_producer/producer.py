@@ -2,6 +2,10 @@ import json
 import time
 from kafka import KafkaProducer
 import requests
+from utils import expect_env_var
+
+kafka_url = expect_env_var("KAFKA_URL")
+kafka_topic = expect_env_var("KAFKA_TOPIC")
 
 list_flights = requests.get('https://www.flightradar24.com/v1/search/web/find?query=afr&limit=5000')
 
@@ -32,7 +36,7 @@ def on_send_error(excp):
 # Create a producer with JSON serializer
 producer = KafkaProducer(
     client_id='0001',
-    bootstrap_servers='10.69.0.36:9092',
+    bootstrap_servers=kafka_url,
     value_serializer=lambda v: json.dumps(v).encode('utf-8'),
     max_block_ms=3000,
 )
@@ -55,7 +59,7 @@ while True:
 
     print(data)
     # Sending JSON data
-    producer.send(topic='locations', value=data).add_callback(on_send_success).add_errback(on_send_error)
+    producer.send(topic=kafka_topic, value=data).add_callback(on_send_success).add_errback(on_send_error)
 
     time.sleep(31)
 # producer.flush()
