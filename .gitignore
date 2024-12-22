@@ -1,0 +1,11 @@
+# Editors
+.helix
+.idea
+.vscode
+
+# Nodejs
+node_modules
+dist
+
+# Misc
+.env
