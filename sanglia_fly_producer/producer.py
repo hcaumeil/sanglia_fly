@@ -9,7 +9,8 @@ from utils import header_request
 kafka_url = expect_env_var("KAFKA_URL")
 kafka_topic = expect_env_var("KAFKA_TOPIC")
 
-list_flights = requests.get('https://www.flightradar24.com/v1/search/web/find?query=afr&limit=5000', headers=header_request())
+list_flights = requests.get('https://www.flightradar24.com/v1/search/web/find?query=afr&limit=5000',
+                            headers=header_request())
 
 list_flights = list_flights.json()['results']
 
@@ -43,7 +44,8 @@ producer = KafkaProducer(
 )
 while True:
     data_flight = requests.get(
-        'https://data-live.flightradar24.com/clickhandler/?version=1.5&flight=' + selected_flight['id'], headers=header_request())
+        'https://data-live.flightradar24.com/clickhandler/?version=1.5&flight=' + selected_flight['id'],
+        headers=header_request())
     data_flight = data_flight.json()
 
     if not data_flight['status']['live']: break
