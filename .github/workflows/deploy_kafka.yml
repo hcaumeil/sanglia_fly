@@ -1,0 +1,16 @@
+name: Deploy Kafka pipeline
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - docker/kafka/**
+
+jobs:
+  deploy_kafka:
+    uses: ./.github/workflows/deploy.yml
+    secrets:
+      clever_token: ${{ secrets.clever_token }}
+      clever_secret: ${{ secrets.clever_secret }}
+      clever_app_id: ${{ secrets.kafka_app_id }}
