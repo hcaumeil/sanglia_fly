@@ -38,7 +38,7 @@ def root() -> Response:
 
 @app.get("/ping")
 def ping():
-    return "PONG !"
+    return "PONG!"
 
 
 @app.get("/teapot", status_code=status.HTTP_418_IM_A_TEAPOT)
