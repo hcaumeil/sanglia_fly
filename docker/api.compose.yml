@@ -18,7 +18,7 @@ services:
 
   api:
     build:
-      context: ../slangia_fly_api
+      context: ../sanglia_fly_api
     depends_on:
       db:
         condition: service_healthy
@@ -44,12 +44,12 @@ services:
     develop:
       watch:
         - action: sync+restart
-          path: ../slangia_fly_api
+          path: ../sanglia_fly_api
           target: /app
           ignore:
             - requirements.txt
         - action: rebuild
-          path: ../slangia_fly_api/requirements.txt
+          path: ../sanglia_fly_api/requirements.txt
 
 networks:
   backbone:
