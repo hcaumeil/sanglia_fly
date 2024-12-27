@@ -46,13 +46,13 @@ async def _select_flight(consumer, producer, kafka_topic, flights, excluded):
         if message["type"] == "Flight":
             exclude_flight(message["id"], flights, excluded)
             if message["id"] == flight["id"]:
-                print("Someone got same id as me", flight["id"])
+                print("Someone got same id as me", flight["id"], flush=True)
                 restart = True
         elif message["type"] == "Flights":
             for f in message["ids"]:
                 exclude_flight(f, flights, excluded)
                 if f == flight["id"]:
-                    print("Someone got same id as me", flight["id"])
+                    print("Someone got same id as me", flight["id"], flush=True)
                     restart = True
     if restart:
         return await _select_flight(consumer, producer, kafka_topic, flights, excluded)
@@ -79,12 +79,12 @@ async def _task(consumer, producer, kafka_topic, excluded):
 
 
 async def select_flight(kafka_url, kafka_topic, flights):
-    print("Selecting flight...")
+    print("Selecting flight...", flush=True)
 
     excluded = []
 
     myid = str(uuid.uuid4())
-    print("My id is ", myid)
+    print("My id is ", myid, flush=True)
 
     def deserializer(v):
         m = json.loads(v.decode('utf-8'))
@@ -119,7 +119,7 @@ async def select_flight(kafka_url, kafka_topic, flights):
 
     selected = await _select_flight(consumer, producer, kafka_topic, flights, excluded)
 
-    print("Selected flight: ", selected["id"])
+    print("Selected flight: ", selected["id"], flush=True)
 
     task = create_task(_task(consumer, producer, kafka_topic, excluded))
 

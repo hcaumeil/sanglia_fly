@@ -26,7 +26,7 @@ def get_flights():
             if flight['detail']['operator'] == 'AFR':
                 live_flights.append(flight)
 
-    print('nb live flight : ', len(live_flights))
+    print('nb live flight : ', len(live_flights), flush=True)
 
     return live_flights
 
@@ -34,11 +34,11 @@ def get_flights():
 def on_send_success(record_metadata):
     print('topic : ', record_metadata.topic)
     print('partition : ', record_metadata.partition)
-    print('offset : ', record_metadata.offset)
+    print('offset : ', record_metadata.offset, flush=True)
 
 
 def on_send_error(excp):
-    print('I am an errback', excp)
+    print('I am an errback', excp, flush=True)
 
 
 async def _main(selected_flight):
@@ -69,7 +69,7 @@ async def _main(selected_flight):
             'type': selected_flight['detail']['ac_type'],
         }
 
-        print(data)
+        print(data, flush=True)
         # Sending JSON data
         producer.send(topic=kafka_topic, value=data).add_callback(on_send_success).add_errback(on_send_error)
 
