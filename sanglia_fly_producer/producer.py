@@ -5,8 +5,8 @@ from asyncio import create_task
 
 import requests
 from kafka import KafkaProducer
-import requests
 
+from sync import select_flight
 from utils import expect_env_var
 from utils import header_request
 
@@ -80,9 +80,13 @@ async def _main(selected_flight):
 
 
 async def main():
-    main_task = create_task(_main(live_flights[0]))
+    live_flights = get_flights()
+    selected_flight, sync_task = await select_flight(kafka_url, "sync", live_flights)
+
+    main_task = create_task(_main(selected_flight))
 
     await main_task
+    await sync_task
 
 
 asyncio.run(main())
