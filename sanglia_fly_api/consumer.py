@@ -9,9 +9,6 @@ if sys.version_info >= (3, 12, 0):
     sys.modules["kafka.vendor.six.moves"] = six.moves
 from kafka import KafkaConsumer
 
-import queue
-
-
 class Publisher:
     def __init__(self):
         self.subscribers = []
@@ -29,7 +26,7 @@ class Publisher:
 
 class Subscriber:
     def __init__(self):
-        self.queue = queue.Queue()
+        self.queue = asyncio.Queue()
 
     def receive(self, message):
         try:
@@ -37,8 +34,8 @@ class Subscriber:
         except Exception as e:
             print("e:" + str(e))
 
-    def get(self):
-        return self.queue.get()
+    async def get(self):
+        return await self.queue.get()
 
 
 publisher = Publisher()
