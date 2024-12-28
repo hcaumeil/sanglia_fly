@@ -9,6 +9,8 @@ if sys.version_info >= (3, 12, 0):
     sys.modules["kafka.vendor.six.moves"] = six.moves
 from kafka import KafkaConsumer
 
+from db import db
+
 class Publisher:
     def __init__(self):
         self.subscribers = []
@@ -53,8 +55,16 @@ def main():
             consumer = KafkaConsumer(kafka_topic, bootstrap_servers=kafka_url)
 
             for msg in consumer:
+                cur = db.cursor()
                 liveRecord = LiveRecord.fromJson(msg.value.decode("utf-8"))
                 print(liveRecord)
                 publisher.publish(liveRecord)
+                cur.execute(
+                    "INSERT INTO records (latitude,longitude,altitude,orientation,speed,type,origin) VALUES (%s, %s, %s, %s, %s, %s, %s);",
+                    (liveRecord.latitude,liveRecord.longitude,liveRecord.altitude,liveRecord.orientation,liveRecord.speed,liveRecord.type,liveRecord.origin)
+                )
+                db.commit()
+                cur.close()
         except Exception as e:
             print("error in consumer : " + str(e))
+                 
