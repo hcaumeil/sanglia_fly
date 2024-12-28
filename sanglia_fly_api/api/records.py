@@ -8,6 +8,7 @@ from .error import ErrorResponse, ErrorKind
 
 
 class RecordOutput(BaseModel):
+    at: datetime
     latitude: float
     longitude: float
     altitude: float
@@ -21,7 +22,7 @@ router = APIRouter()
 
 def fetch_all_origins(db):
     cur = db.cursor()
-    cur.execute("SELECT origin FROM records;")
+    cur.execute("SELECT DISTINCT origin FROM records;")
     origins = cur.fetchall()
     db.commit()
     cur.close()
