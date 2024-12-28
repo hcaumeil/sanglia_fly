@@ -20,7 +20,7 @@ async def _records_generator():
         if r != None:
             data: LiveRecord = r
             data = data.toJson()
-            yield f"data: {data}\n"
+            yield f"event: message\ndata: {data}\n\n"
 
 async def records_generator():
     async with aclosing(_records_generator()) as values:
