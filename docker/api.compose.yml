@@ -16,12 +16,37 @@ services:
       retries: 10
       start_period: 10s
 
+  bootstrap_db:
+    build:
+      context: ../sanglia_fly_api
+      dockerfile: bootstrap-database.Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      POSTGRESQL_ADDON_DB: sanglia_fly
+      POSTGRESQL_ADDON_HOST: db
+      POSTGRESQL_ADDON_PASSWORD: password
+      POSTGRESQL_ADDON_PORT: 5432
+      POSTGRESQL_ADDON_USER: user
+    networks:
+      - backbone
+    develop:
+      watch:
+        - action: sync+restart
+          path: ../sanglia_fly_api/migrations
+          target: /app/migrations
+        - action: rebuild
+          path: ../sanglia_fly_api/bootstrap-database.Dockerfile
+
   api:
     build:
       context: ../sanglia_fly_api
     depends_on:
       db:
         condition: service_healthy
+      bootstrap_db:
+        condition: service_completed_successfully
     environment:
       POSTGRESQL_ADDON_DB: sanglia_fly
       POSTGRESQL_ADDON_HOST: db
@@ -48,8 +73,12 @@ services:
           target: /app
           ignore:
             - requirements.txt
+            - Dockerfile
+            - bootstrap-database.Dockerfile
         - action: rebuild
           path: ../sanglia_fly_api/requirements.txt
+        - action: rebuild
+          path: ../sanglia_fly_api/Dockerfile
 
 networks:
   backbone:
