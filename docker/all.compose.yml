@@ -28,6 +28,10 @@ services:
     extends:
       service: db
       file: api.compose.yml
+  bootstrap_db:
+    extends:
+      service: bootstrap_db
+      file: api.compose.yml
   api:
     extends:
       service: api
@@ -35,6 +39,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
+        required: true
+      bootstrap_db:
+        condition: service_completed_successfully
         required: true
       kafka_broker:
         condition: service_healthy

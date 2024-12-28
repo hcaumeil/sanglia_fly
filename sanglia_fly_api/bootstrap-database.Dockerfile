@@ -1,0 +1,6 @@
+FROM alpine/psql:16.3
+
+COPY . /app
+
+ENTRYPOINT ["sh", "-c", "psql postgresql://$POSTGRESQL_ADDON_USER:$POSTGRESQL_ADDON_PASSWORD@$POSTGRESQL_ADDON_HOST:$POSTGRESQL_ADDON_PORT/$POSTGRESQL_ADDON_DB -f /app/migrations/create_table.sql"]
+CMD []
