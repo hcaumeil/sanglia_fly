@@ -44,6 +44,22 @@ docker compose -f api.compose.yml up
 docker compose -f api.compose.yml up --watch
 ```
 
+### Starting the producer
+
+```shell
+cd docker
+docker compose -f producer.compose.yml up
+
+# With watch mode
+docker compose -f producer.compose.yml up --watch
+```
+
+#### Scaling producers
+
+```shell
+docker compose -f producer.compose.yml scale producer=N # Where N is the number of producers
+```
+
 ### Starting the components
 
 ```shell
@@ -52,4 +68,10 @@ docker compose -f all.compose.yml up
 
 # With watch mode
 docker compose -f all.compose.yml up --watch
+```
+
+#### Scaling producers
+
+```shell
+docker compose -f all.compose.yml scale producer=N # Where N is the number of producers
 ```

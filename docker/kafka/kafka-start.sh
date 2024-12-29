@@ -17,4 +17,4 @@ echo -e "${GREEN}Kafka up${RESET}"
 /opt/kafka/bin/kafka-topics.sh --create --topic locations --bootstrap-server localhost:9092 --replication-factor 1 || true
 /opt/kafka/bin/kafka-topics.sh --create --topic sync --bootstrap-server localhost:9092 --replication-factor 1 || true
 
-fg
+fg %1
