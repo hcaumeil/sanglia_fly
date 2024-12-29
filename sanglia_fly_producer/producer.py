@@ -6,12 +6,15 @@ from asyncio import create_task
 import requests
 from aiokafka import AIOKafkaProducer
 
+from sanglia_fly_producer.utils import env_var_or_false
 from sync import select_flight
 from utils import expect_env_var
 from utils import header_request
 
 kafka_url = expect_env_var("KAFKA_URL")
 kafka_topic = expect_env_var("KAFKA_TOPIC")
+
+restart_when_finished = env_var_or_false("RESTART_WHEN_FINISHED")
 
 
 def get_flights():
@@ -31,7 +34,7 @@ def get_flights():
     return live_flights
 
 
-async def _main(selected_flight):
+async def _main(selected_flight, sync_task):
     # Create a producer with JSON serializer
     producer = AIOKafkaProducer(
         bootstrap_servers=kafka_url,
@@ -77,18 +80,22 @@ async def _main(selected_flight):
 
         await asyncio.sleep(31 + random.random() * 8)
 
+    sync_task.cancel()
+
 
 # producer.flush()
 
 
 async def main():
-    live_flights = get_flights()
-    selected_flight, sync_task = await select_flight(kafka_url, "sync", live_flights)
+    while True:
+        live_flights = get_flights()
+        selected_flight, sync_task = await select_flight(kafka_url, "sync", live_flights)
 
-    main_task = create_task(_main(selected_flight))
+        main_task = create_task(_main(selected_flight, sync_task))
 
-    await main_task
-    await sync_task
+        await main_task
+        await sync_task
+        if not restart_when_finished: break
 
 
 asyncio.run(main())
