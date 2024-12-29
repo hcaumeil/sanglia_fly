@@ -6,7 +6,7 @@ from asyncio import create_task
 import requests
 from aiokafka import AIOKafkaProducer
 
-from sanglia_fly_producer.utils import env_var_or_false
+from utils import env_var_or_false
 from sync import select_flight
 from utils import expect_env_var
 from utils import header_request
