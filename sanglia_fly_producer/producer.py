@@ -40,6 +40,7 @@ async def _main(selected_flight, sync_task):
         bootstrap_servers=kafka_url,
         value_serializer=lambda v: json.dumps(v).encode('utf-8'),
     )
+    await producer.start()
 
     session = requests.sessions.Session()
     last_data = None
