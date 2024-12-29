@@ -5,6 +5,8 @@ from asyncio import create_task, sleep
 
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 
+from utils import start_client
+
 
 def exclude_flight(fid, flights, excluded):
     for i in range(0, len(flights)):
@@ -99,10 +101,10 @@ async def select_flight(kafka_url, kafka_topic, flights):
 
     consumer = AIOKafkaConsumer(kafka_topic, bootstrap_servers=kafka_url, value_deserializer=deserializer,
                                 group_instance_id=myid, max_poll_interval_ms=300)
-    await consumer.start()
+    await start_client(consumer)
     producer = AIOKafkaProducer(bootstrap_servers=kafka_url, value_serializer=serializer,
                                 partitioner=lambda key_bytes, all_partitions, available_partitions: 0)
-    await producer.start()
+    await start_client(producer)
 
     # Send JoinMessage
     await producer.send_and_wait(topic=kafka_topic, value={"type": "Join"})
