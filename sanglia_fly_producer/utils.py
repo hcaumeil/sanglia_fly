@@ -11,12 +11,10 @@ def expect_env_var(var):
     return res
 
 
-# get an env var, if the env var is not provided the program crash
+# get an env var, if the env var is not provided False is provided
 def env_var_or_false(var):
     res = os.environ.get(var)
-    if res == None:
-        return False
-    return res
+    return res == "true" or res == "1"
 
 
 user_agents = [
