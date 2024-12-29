@@ -4,7 +4,7 @@ import random
 from asyncio import create_task
 
 import requests
-from kafka import KafkaProducer
+from aiokafka import AIOKafkaProducer
 
 from sync import select_flight
 from utils import expect_env_var
@@ -31,22 +31,11 @@ def get_flights():
     return live_flights
 
 
-def on_send_success(record_metadata):
-    print('topic : ', record_metadata.topic)
-    print('partition : ', record_metadata.partition)
-    print('offset : ', record_metadata.offset, flush=True)
-
-
-def on_send_error(excp):
-    print('I am an errback', excp, flush=True)
-
-
 async def _main(selected_flight):
     # Create a producer with JSON serializer
-    producer = KafkaProducer(
+    producer = AIOKafkaProducer(
         bootstrap_servers=kafka_url,
         value_serializer=lambda v: json.dumps(v).encode('utf-8'),
-        max_block_ms=3000,
     )
 
     while True:
@@ -71,7 +60,7 @@ async def _main(selected_flight):
 
         print(data, flush=True)
         # Sending JSON data
-        producer.send(topic=kafka_topic, value=data).add_callback(on_send_success).add_errback(on_send_error)
+        await producer.send_and_wait(topic=kafka_topic, value=data)
 
         await asyncio.sleep(31 + random.random() * 8)
 
