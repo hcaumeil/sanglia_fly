@@ -6,10 +6,8 @@ from asyncio import create_task
 import requests
 from aiokafka import AIOKafkaProducer
 
-from utils import env_var_or_false
+from utils import expect_env_var, env_var_or_false, header_request, start_client
 from sync import select_flight
-from utils import expect_env_var
-from utils import header_request
 
 kafka_url = expect_env_var("KAFKA_URL")
 kafka_topic = expect_env_var("KAFKA_TOPIC")
@@ -40,7 +38,7 @@ async def _main(selected_flight, sync_task):
         bootstrap_servers=kafka_url,
         value_serializer=lambda v: json.dumps(v).encode('utf-8'),
     )
-    await producer.start()
+    await start_client(producer)
 
     session = requests.sessions.Session()
     last_data = None

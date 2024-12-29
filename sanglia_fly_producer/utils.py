@@ -1,3 +1,4 @@
+import asyncio
 import os
 import random
 
@@ -103,3 +104,15 @@ def header_request():
     return {
         'user-agent': user_agents[random.randint(0, len(user_agents) - 1)]
     }
+
+
+async def start_client(client):
+    while True:
+        try:
+            await client.start()
+            break
+        except Exception as e:
+            print(e)
+            if not env_var_or_false("RETRY_ON_KAFKA_INIT_ERR"):
+                exit(1)
+            await asyncio.sleep(5)
