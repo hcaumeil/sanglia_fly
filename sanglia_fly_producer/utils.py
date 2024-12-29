@@ -11,6 +11,12 @@ def expect_env_var(var):
     return res
 
 
+# get an env var, if the env var is not provided False is provided
+def env_var_or_false(var):
+    res = os.environ.get(var)
+    return res == "true" or res == "1"
+
+
 user_agents = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
