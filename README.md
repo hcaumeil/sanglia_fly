@@ -1,5 +1,21 @@
 # Sanglia Fly
 
+## Components
+
+### Kafka broker
+
+### API
+
+### Producer
+
+#### Environment variables
+
+`RETRY_ON_KAFKA_INIT_ERR`: (bool) when `true` the producer while continue to try to initialise if the broker is
+unreachable.
+
+`RESTART_WHEN_FINISHED`: (bool) enable a producer to choose another flight when the previous finished.
+
+### Front
 
 ## Docker
 
