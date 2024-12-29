@@ -67,15 +67,16 @@ async def _select_flight(consumer, producer, kafka_topic, flights, excluded):
 async def _task(consumer, producer, kafka_topic, excluded):
     async for message in consumer:
         message = message.value
-        if message["type"] == "Flight":
-            if message["id"] not in excluded:
-                excluded.append(message["id"])
-        elif message["type"] == "Flights":
-            for fid in message["ids"]:
-                if fid not in excluded:
-                    excluded.append(fid)
-        elif message["type"] == "Join":
-            await producer.send_and_wait(topic=kafka_topic, value={"type": "Flights", "ids": excluded})
+        match message["type"]:
+            case "Flight":
+                if message["id"] not in excluded:
+                    excluded.append(message["id"])
+            case "Flights":
+                for fid in message["ids"]:
+                    if fid not in excluded:
+                        excluded.append(fid)
+            case "Join":
+                await producer.send_and_wait(topic=kafka_topic, value={"type": "Flights", "ids": excluded})
 
 
 async def select_flight(kafka_url, kafka_topic, flights):
