@@ -38,10 +38,14 @@ async def _main(selected_flight):
         value_serializer=lambda v: json.dumps(v).encode('utf-8'),
     )
 
+    session = requests.sessions.Session()
+    last_data = None
+    headers = header_request()
+
     while True:
-        data_flight = requests.get(
+        data_flight = session.get(
             'https://data-live.flightradar24.com/clickhandler/?version=1.5&flight=' + selected_flight['id'],
-            headers=header_request())
+            headers=headers)
         data_flight = data_flight.json()
 
         if not data_flight['status']['live']: break
@@ -57,6 +61,15 @@ async def _main(selected_flight):
             'speed': selected_data_flight['spd'],
             'type': selected_flight['detail']['ac_type'],
         }
+
+        if last_data is not None and data == last_data:
+            print("Recreating session", flush=True)
+            session.close()
+            session = requests.sessions.session()
+            last_data = None
+            headers = header_request()
+        else:
+            last_data = data
 
         print(data, flush=True)
         # Sending JSON data
