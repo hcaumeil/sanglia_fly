@@ -7,6 +7,7 @@ services:
     environment:
       KAFKA_URL: todo
       KAFKA_TOPIC: locations
+      RETRY_ON_KAFKA_INIT_ERR: true
     healthcheck:
       test: [ "CMD-SHELL", "curl http://localhost:8800" ]
       interval: 5s
