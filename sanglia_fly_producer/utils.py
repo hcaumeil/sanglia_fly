@@ -9,6 +9,8 @@ def expect_env_var(var):
         print("error: please provide env ", var)
         exit(1)
     return res
+
+
 # get an env var, if the env var is not provided the program crash
 def env_var_or_false(var):
     res = os.environ.get(var)
