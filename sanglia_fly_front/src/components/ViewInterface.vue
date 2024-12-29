@@ -61,24 +61,24 @@ export default {
   },
   methods: {
     startEventSource() {
-      this.eventSource = new EventSource(`http://localhost:8080/api/events`);
+      this.eventSource = new EventSource(`http://localhost:8080/live/`);
 
       this.eventSource.addEventListener("message", (event) => {
         const data = JSON.parse(event.data);
-        const existingObject = this.planeData.find((obj) => obj.id === data.id);
+        const existingObject = this.planeData.find((obj) => obj.id === data.origin);
 
         if (existingObject) {
-          existingObject.lat = data.lat;
-          existingObject.lng = data.long;
-          existingObject.alt = this.normalizeAltitude(data.alt);
-          existingObject.realAlt = data.alt
+          existingObject.lat = data.latitude;
+          existingObject.lng = data.longitude;
+          existingObject.alt = this.normalizeAltitude(data.altitude);
+          existingObject.realAlt = data.altitude
         } else {
           this.planeData.push({
-            id: data.id,
-            lat: data.lat,
-            lng: data.long,
-            alt: this.normalizeAltitude(data.alt),
-            realAlt: data.alt
+            id: data.origin,
+            lat: data.latitude,
+            lng: data.longitude,
+            alt: this.normalizeAltitude(data.altitude),
+            realAlt: data.altitude
           });
         }
 
