@@ -1,6 +1,7 @@
 import './assets/main.css'
 
 import { createApp } from 'vue'
+// @ts-ignore can't resolve type
 import App from './App.vue'
 
 import 'vuetify/styles'
