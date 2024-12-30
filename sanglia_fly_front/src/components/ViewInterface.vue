@@ -91,8 +91,9 @@ export default {
         this.planeData = [...this.planeData];
       });
     },
-    normalizeAltitude(alt, altMin = 0, altMax = 20000) {
-      return Math.min(Math.max((alt - altMin) / (altMax - altMin), 0), 1);
+    normalizeAltitude(alt, altMin = 0, altMax = 12000) {
+      const normAlt = Math.min(Math.max((alt - altMin) / (altMax - altMin), 0), 1);
+      return (normAlt * 1000) / 12000000
     },
     onPlaneSelected(id) {
       this.selectedPlaneId = id;
