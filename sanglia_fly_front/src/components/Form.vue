@@ -83,8 +83,8 @@
             </thead>
             <tbody>
             <tr>
-              <td width="50%">...km/h</td>
-              <td>...</td>
+              <td width="50%">{{planeData.filter((elem) => elem.id === selectedPlaneId)[0].speed}}km/h</td>
+              <td>{{planeData.filter((elem) => elem.id === selectedPlaneId)[0].type}}</td>
             </tr>
             </tbody>
           </table>
