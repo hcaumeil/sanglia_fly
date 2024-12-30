@@ -73,7 +73,7 @@ export default {
       this.markers = {};
 
       planeData.forEach((plane) => {
-        const icon = this.createPlaneIcon( plane.orientation -44 +90|| -44);
+        const icon = this.createPlaneIcon( plane.orientation -44|| -44);
         const marker = L.marker([plane.lat, plane.lng], {
           title: plane.id,
           icon,

@@ -35,7 +35,6 @@ export default {
           newData = newData.map((elem) => {
             return elem;
           });
-          console.log(newData)
           this.world.objectsData(newData);
 
           if (this.isCameraLocked && this.selectedPlaneId) {
@@ -166,7 +165,7 @@ export default {
 
         planeGroup.quaternion.copy(quaternion);
 
-        const directionRad = THREE.MathUtils.degToRad(orientation + 180);
+        const directionRad = THREE.MathUtils.degToRad(orientation);
 
         const rotationQuaternion = new THREE.Quaternion().setFromAxisAngle(
             new THREE.Vector3(0, 1, 0),
