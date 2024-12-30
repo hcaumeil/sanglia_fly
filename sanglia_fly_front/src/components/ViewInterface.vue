@@ -71,14 +71,18 @@ export default {
           existingObject.lat = data.latitude;
           existingObject.lng = data.longitude;
           existingObject.alt = this.normalizeAltitude(data.altitude);
-          existingObject.realAlt = data.altitude
+          existingObject.realAlt = data.altitude;
+          existingObject.speed = data.speed;
+          existingObject.type = data.type;
         } else {
           this.planeData.push({
             id: data.origin,
             lat: data.latitude,
             lng: data.longitude,
             alt: this.normalizeAltitude(data.altitude),
-            realAlt: data.altitude
+            realAlt: data.altitude,
+            speed: data.speed,
+            type: data.type
           });
         }
 
