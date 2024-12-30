@@ -61,7 +61,11 @@ export default {
   },
   methods: {
     startEventSource() {
-      this.eventSource = new EventSource(`http://localhost:8080/live/`);
+      let api_url = import.meta.env.VITE_API_URL
+      if (api_url === undefined) {
+        api_url = "http://localhost:8080"
+      }
+      this.eventSource = new EventSource(api_url+`/live/`);
 
       this.eventSource.addEventListener("message", (event) => {
         const data = JSON.parse(event.data);
