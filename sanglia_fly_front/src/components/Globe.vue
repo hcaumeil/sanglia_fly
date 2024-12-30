@@ -33,7 +33,6 @@ export default {
       handler(newData) {
         if (this.world) {
           newData = newData.map((elem) => {
-            elem.direction = 90;
             return elem;
           });
           console.log(newData)
@@ -75,7 +74,7 @@ export default {
 
       setTimeout(() => this.world.pointOfView({ altitude: this.currentAltitude }));
 
-      const createPlaneIcon = (lat, lng, direction) => {
+      const createPlaneIcon = (lat, lng, orientation) => {
 
         const globeRadius = this.world.getGlobeRadius();
         const scaleFactor = (this.SAT_SIZE * globeRadius) / this.EARTH_RADIUS_KM;
@@ -167,10 +166,10 @@ export default {
 
         planeGroup.quaternion.copy(quaternion);
 
-        const directionRad = THREE.MathUtils.degToRad(direction);
+        const directionRad = THREE.MathUtils.degToRad(orientation + 180);
 
         const rotationQuaternion = new THREE.Quaternion().setFromAxisAngle(
-            new THREE.Vector3(0, 1, 0), // Rotation autour de l'axe Y
+            new THREE.Vector3(0, 1, 0),
             directionRad
         );
 
@@ -181,8 +180,8 @@ export default {
 
 
 
-      this.world.objectThreeObject(({ lat, lng, direction }) =>
-          createPlaneIcon(lat, lng, direction)
+      this.world.objectThreeObject(({ lat, lng, orientation }) =>
+          createPlaneIcon(lat, lng, orientation)
       );
 
       this.world.objectsData(this.planeData);
