@@ -30,7 +30,7 @@
 
         <div class="image-container">
           <v-img
-              src="/public/logo.png"
+              :src=this.logoUrl
               height="100%"
               class="logo-image"
           />
@@ -111,6 +111,7 @@ export default {
     return {
       localSelectedPlaneId: this.selectedPlaneId,
       show: false,
+      logoUrl: logoUrl
     };
   },
   watch: {
@@ -122,6 +123,7 @@ export default {
     },
   },
 };
+import logoUrl from "@public/logo.png"
 </script>
 
 <style scoped>

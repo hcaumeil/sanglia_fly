@@ -6,6 +6,7 @@
 
 <script>
 import L from "leaflet";
+import planeUrl from "@public/plane.png";
 
 export default {
   name: "Map",
@@ -87,7 +88,7 @@ export default {
       const planeIcon = L.divIcon({
         html: `
           <div style="transform: rotate(${rotation}deg);">
-            <img src="/public/plane.png" alt="plane" style="width: 40px; height: 40px;">
+            <img src="`+planeUrl+`" alt="plane" style="width: 40px; height: 40px;">
           </div>
         `,
         className: "plane-icon",
