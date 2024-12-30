@@ -74,6 +74,7 @@ export default {
           existingObject.realAlt = data.altitude;
           existingObject.speed = data.speed;
           existingObject.type = data.type;
+          existingObject.orientation = data.orientation;
         } else {
           this.planeData.push({
             id: data.origin,
@@ -82,7 +83,8 @@ export default {
             alt: this.normalizeAltitude(data.altitude),
             realAlt: data.altitude,
             speed: data.speed,
-            type: data.type
+            type: data.type,
+            orientation: data.orientation
           });
         }
 
