@@ -1,0 +1,16 @@
+name: Deploy front pipeline
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - sanglia_fly_front/**
+
+jobs:
+  deploy_front:
+    uses: ./.github/workflows/deploy.yml
+    secrets:
+      clever_token: ${{ secrets.clever_token }}
+      clever_secret: ${{ secrets.clever_secret }}
+      clever_app_id: ${{ secrets.front_app_id }}

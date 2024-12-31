@@ -8,7 +8,9 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
-    "type-check": "vue-tsc --build --force"
+    "type-check": "vue-tsc --build --force",
+    "install": "npm run build",
+    "start": "python3 -m http.server 8080 -d dist/"
   },
   "dependencies": {
     "globe.gl": "^2.33.2",
@@ -30,5 +32,8 @@
     "vite": "^5.4.10",
     "vite-plugin-vue-devtools": "^7.5.4",
     "vue-tsc": "^2.1.10"
+  },
+  "engines" : {
+    "node" : "^18"
   }
 }
