@@ -1,6 +1,6 @@
 FROM python:3.12.3-alpine
 
-RUN apk add curl musl-dev gcc libpq-dev g++
+RUN apk add curl musl-dev gcc libpq-dev g++ zlib-dev
 
 COPY . /app
 WORKDIR /app
