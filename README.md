@@ -60,6 +60,16 @@ docker compose -f producer.compose.yml up --watch
 docker compose -f producer.compose.yml scale producer=N # Where N is the number of producers
 ```
 
+### Starting the frontend
+
+```shell
+cd docker
+docker compose -f front.compose.yml up
+
+# With watch mode
+docker compose -f front.compose.yml up --watch
+```
+
 ### Starting the components
 
 ```shell
