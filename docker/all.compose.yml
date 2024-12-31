@@ -48,6 +48,17 @@ services:
         required: true
     environment:
       KAFKA_URL: kafka_broker:9092
+  front:
+    extends:
+      service: front
+      file: front.compose.yml
+    depends_on:
+      api:
+        condition: service_healthy
+        required: true
+    build:
+      args:
+        VITE_API_URL: http://localhost:8080
 
 networks:
   backbone:

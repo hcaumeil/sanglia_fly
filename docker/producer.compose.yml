@@ -14,6 +14,7 @@ services:
       timeout: 60s
       retries: 10
       start_period: 10s
+    restart: on-failure
     scale: 1
     develop:
       watch:

@@ -7,7 +7,7 @@ import time
 
 async def main():
     async with asyncio.TaskGroup() as tg:
-        kafka = tg.create_task(asyncio.to_thread(consumer_main))
+        kafka = tg.create_task(consumer_main())
         api = tg.create_task(api_main())
 
         print(f"started at {time.strftime('%X')}")

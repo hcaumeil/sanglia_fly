@@ -1,15 +1,15 @@
 import asyncio
-
 # https://github.com/dpkp/kafka-python/issues/2401
 import sys
+
 import six
-import json
 
 if sys.version_info >= (3, 12, 0):
     sys.modules["kafka.vendor.six.moves"] = six.moves
-from kafka import KafkaConsumer
+from aiokafka import AIOKafkaConsumer
 
 from db import db
+
 
 class Publisher:
     def __init__(self):
@@ -49,22 +49,31 @@ kafka_url = expect_env_var("KAFKA_URL")
 kafka_topic = expect_env_var("KAFKA_TOPIC")
 
 
-def main():
+async def main():
     while True:
         try:
-            consumer = KafkaConsumer(kafka_topic, bootstrap_servers=kafka_url)
+            consumer = AIOKafkaConsumer(kafka_topic, bootstrap_servers=kafka_url)
+            await consumer.start()
 
-            for msg in consumer:
+            while True:
+                await consumer._client.fetch_all_metadata()
+                msg = None
+                try:
+                    msg = await asyncio.wait_for(consumer.getone(), timeout=40)
+                except asyncio.TimeoutError:
+                    continue
+                if msg is None:
+                    break
                 cur = db.cursor()
                 liveRecord = LiveRecord.fromJson(msg.value.decode("utf-8"))
                 print(liveRecord)
                 publisher.publish(liveRecord)
                 cur.execute(
                     "INSERT INTO records (latitude,longitude,altitude,orientation,speed,type,origin) VALUES (%s, %s, %s, %s, %s, %s, %s);",
-                    (liveRecord.latitude,liveRecord.longitude,liveRecord.altitude,liveRecord.orientation,liveRecord.speed,liveRecord.type,liveRecord.origin)
+                    (liveRecord.latitude, liveRecord.longitude, liveRecord.altitude, liveRecord.orientation,
+                     liveRecord.speed, liveRecord.type, liveRecord.origin)
                 )
                 db.commit()
                 cur.close()
         except Exception as e:
             print("error in consumer : " + str(e))
-                 
