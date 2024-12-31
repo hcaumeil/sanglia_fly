@@ -1,0 +1,22 @@
+name: sanglia_fly_front
+
+services:
+  front:
+    build:
+      context: ../sanglia_fly_front
+      args:
+        VITE_API_URL: http://localhost:8080
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl http://localhost:8000" ]
+      interval: 5s
+      timeout: 60s
+      retries: 10
+      start_period: 10s
+    restart: on-failure
+    develop:
+      watch:
+        - action: rebuild
+          path: ../sanglia_fly_front
+          target: /app
